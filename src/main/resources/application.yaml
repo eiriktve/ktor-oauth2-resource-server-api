@@ -1,0 +1,12 @@
+ktor:
+  deployment:
+    host: localhost
+    port: 8080
+  application:
+    modules:
+      - no.stackcanary.config.AppConfigKt.mainModule
+
+postgres:
+  url: "jdbc:postgresql://localhost:5432/playground_db"
+  user: postgres
+  password: admin
