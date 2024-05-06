@@ -12,7 +12,7 @@ Other than that, this repo demonstrates best practices for common use cases, suc
 - OpenAPI documentation
 
 ## Domain
-The resources guarded by this resource server API is employee information. You can create and change employees, and 
+The resource guarded by this resource server API is employee information. You can create and change employees, and 
 retrieve information about employees and their certifications.
 
 ## Database 
