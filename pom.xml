@@ -10,19 +10,21 @@
 
     <properties>
         <kotlin.code.style>official</kotlin.code.style>
-        <kotlin_version>1.9.21</kotlin_version>
-        <ktor_version>2.3.7</ktor_version>
+        <kotlin_version>1.9.23</kotlin_version>
+        <ktor_version>2.3.11</ktor_version>
 
-        <logback_version>1.5.0</logback_version>
+        <logback_version>1.5.6</logback_version>
         <slf4j_version>2.0.12</slf4j_version>
-        <exposed_version>0.48.0</exposed_version>
-        <postgres_version>42.7.2</postgres_version>
+        <exposed_version>0.49.0</exposed_version>
+        <postgres_version>42.7.3</postgres_version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>no.stackcanary.ApplicationKt</main.class>
     </properties>
 
     <dependencies>
+
+        <!-- Ktor -->
         <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-server-core-jvm</artifactId>
@@ -64,6 +66,13 @@
             <version>${ktor_version}</version>
         </dependency>
         <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-server-netty-jvm</artifactId>
+            <version>${ktor_version}</version>
+        </dependency>
+
+        <!-- Database -->
+        <dependency>
             <groupId>org.jetbrains.exposed</groupId>
             <artifactId>exposed-core</artifactId>
             <version>${exposed_version}</version>
@@ -78,11 +87,8 @@
             <artifactId>postgresql</artifactId>
             <version>${postgres_version}</version>
         </dependency>
-        <dependency>
-            <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-netty-jvm</artifactId>
-            <version>${ktor_version}</version>
-        </dependency>
+
+        <!-- Logging -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -118,7 +124,7 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.16.0</version>
+            <version>1.17.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -130,7 +136,7 @@
         <dependency>
             <groupId>org.jetbrains.kotlinx</groupId>
             <artifactId>kotlinx-coroutines-debug</artifactId>
-            <version>1.6.4</version>
+            <version>1.8.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
