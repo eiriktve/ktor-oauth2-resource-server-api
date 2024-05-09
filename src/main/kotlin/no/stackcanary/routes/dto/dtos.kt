@@ -1,7 +1,9 @@
 package no.stackcanary.routes.dto
 
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Employee(
     val firstName: String,
     val lastName: String,
@@ -10,11 +12,13 @@ data class Employee(
     val employerId: Int
 )
 
+@Serializable
 data class Company(
     val name: String,
     val businessArea: String
 )
 
+@Serializable
 data class Certification(
     val name: String,
     val authority: String,

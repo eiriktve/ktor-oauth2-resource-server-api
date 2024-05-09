@@ -3,7 +3,7 @@ package no.stackcanary.dao.tables
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table
 
-object CompanyTable: Table("Company") {
+object Companies: Table("Company") {
     val companyId: Column<Int> = integer("company_id").autoIncrement()
     val name: Column<String> = varchar("name", 50).uniqueIndex()
     val business: Column<String> = varchar("business", 50)

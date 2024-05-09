@@ -9,11 +9,19 @@ import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.swagger.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
+import no.stackcanary.di.appModule
 import no.stackcanary.routes.employeeRoutes
+import org.koin.ktor.plugin.Koin
+import org.koin.logger.slf4jLogger
 import org.slf4j.event.Level
 
 fun Application.mainModule() {
     initDatabase() // Also configures Exposed
+
+    install(Koin) {
+        slf4jLogger()
+        modules(appModule)
+    }
 
     install(CallLogging) {
         level = Level.INFO

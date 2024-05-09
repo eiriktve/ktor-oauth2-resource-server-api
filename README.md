@@ -9,6 +9,7 @@ Other than that, this repo demonstrates best practices for common use cases, suc
 - Database setup and configuration (postgres), using JetBrains Exposed
 - Authorizing requests  
 - Routing and CRUD operations
+- Dependency Injection with [Koin](https://insert-koin.io)
 - OpenAPI documentation
 
 ## Domain
