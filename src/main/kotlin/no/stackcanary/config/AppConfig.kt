@@ -9,8 +9,8 @@ import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.swagger.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
-import org.slf4j.event.Level
 import no.stackcanary.routes.employeeRoutes
+import org.slf4j.event.Level
 
 fun Application.mainModule() {
     initDatabase() // Also configures Exposed

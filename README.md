@@ -19,30 +19,31 @@ retrieve information about employees and their certifications.
 The following postgres tables are required. 
 
 ````sql
+-- Create Company Table
+CREATE TABLE Company (
+    company_id SERIAL PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL,
+    business VARCHAR(50) NOT NULL -- i.e., IT, Health, Stocks/trading
+);
+
 -- Create Employee Table
 CREATE TABLE Employee (
-    EmployeeID SERIAL PRIMARY KEY,
-    FirstName VARCHAR(50),
-    LastName VARCHAR(50),
-    Position VARCHAR(50),
-    EmployerID INT REFERENCES Company(CompanyID)
+    employee_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    position VARCHAR(50),
+    employer_id INT REFERENCES Company(company_id)
 );
 
 -- Create Certification Table
 CREATE TABLE Certification (
-    CertificationID SERIAL PRIMARY KEY,
-    EmployeeID INT REFERENCES Employee(EmployeeID),
-    CertificationName VARCHAR(100),
-    CertificationAuthority VARCHAR(100),
-    DateEarned DATE,
-    ExpiryDate DATE
-);
-
--- Create Company Table
-CREATE TABLE Company (
-  CompanyID SERIAL PRIMARY KEY,
-  Name VARCHAR(50),
-  Business VARCHAR(50) -- i.e., IT, Health, Stocks/trading
+    certification_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) UNIQUE NOT NULL,
+    authority VARCHAR(100) NOT NULL,
+    date_earned DATE NOT NULL,
+    expiry_date DATE NOT NULL,
+    employee_id INT REFERENCES Employee(employee_id)
 );
 ````
 
