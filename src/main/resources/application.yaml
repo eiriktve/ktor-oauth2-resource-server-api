@@ -1,12 +1,14 @@
+# List of predefined properties to consider: https://ktor.io/docs/server-configuration-file.html#predefined-properties
 ktor:
+  environment: "$KTOR_ENV:dev"
   deployment:
     host: localhost
-    port: 8080
+    port: "$PORT:8080"
   application:
     modules:
       - no.stackcanary.config.AppConfigKt.mainModule
 
 postgres:
-  url: "jdbc:postgresql://localhost:5432/playground_db"
-  user: postgres
-  password: admin
+  url: "$DB_URL:jdbc:postgresql://localhost:5432/playground_db"
+  user: "$DB_USER:postgres"
+  password: "$DB_PW:admin"

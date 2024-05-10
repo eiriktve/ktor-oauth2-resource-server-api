@@ -23,12 +23,18 @@
         <main.class>no.stackcanary.ApplicationKt</main.class>
     </properties>
 
+    <!-- TODO cleanup dependencies -->
     <dependencies>
 
         <!-- Ktor -->
         <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-server-core-jvm</artifactId>
+            <version>${ktor_version}</version>
+        </dependency>
+        <dependency> <!-- To be able to use yaml as server configuration -->
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-server-config-yaml-jvm</artifactId>
             <version>${ktor_version}</version>
         </dependency>
         <dependency>
@@ -69,11 +75,6 @@
         <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-server-netty-jvm</artifactId>
-            <version>${ktor_version}</version>
-        </dependency>
-        <dependency> <!-- To be able to use yaml as server configuration -->
-            <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-config-yaml-jvm</artifactId>
             <version>${ktor_version}</version>
         </dependency>
 
@@ -136,25 +137,6 @@
             <groupId>io.ktor</groupId>
             <artifactId>ktor-server-tests-jvm</artifactId>
             <version>${ktor_version}</version>
-            <scope>test</scope>
-            <!-- Apparently ktor does not bump their transients, the included commons-codec is fucking ancient -->
-            <exclusions>
-                <exclusion>
-                    <artifactId>commons-codec</artifactId>
-                    <groupId>commons-codec</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.17.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-test-junit</artifactId>
-            <version>${kotlin_version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -22,7 +22,7 @@ class EmployeeRepositoryImpl(): EmployeeRepository {
     /**
      * Utility function used for querying.
      *
-     * Starts each query in its own coroutine, instead of accessing it in a blocking way.
+     * Starts each query in its own coroutine
      */
     private suspend fun <T> dbQuery(block: suspend () -> T): T =
         newSuspendedTransaction(Dispatchers.IO) { block() }
