@@ -27,14 +27,14 @@
     <dependencies>
 
         <!-- Ktor -->
+        <dependency> <!-- To be able to use yaml as server configuration, NB: this dependency needs to be at the top -->
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-server-config-yaml-jvm</artifactId>
+            <version>${ktor_version}</version>
+        </dependency>
         <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-server-core-jvm</artifactId>
-            <version>${ktor_version}</version>
-        </dependency>
-        <dependency> <!-- To be able to use yaml as server configuration -->
-            <groupId>io.ktor</groupId>
-            <artifactId>ktor-server-config-yaml-jvm</artifactId>
             <version>${ktor_version}</version>
         </dependency>
         <dependency>
