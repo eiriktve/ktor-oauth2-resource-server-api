@@ -5,28 +5,41 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import no.stackcanary.INVALID_AUTHORIZATION_HEADER
+import no.stackcanary.INVALID_PARAM_ID
 import no.stackcanary.routes.dto.Employee
 import no.stackcanary.service.EmployeeService
+import no.stackcanary.service.TokenService
 import org.koin.ktor.ext.inject
 
+
+// TODO extract duplicate code
 fun Route.employeeRoutes() {
 
-    val service by inject<EmployeeService>()
-    val invalidIdResponseValue = "Invalid ID"
+    val employeeService by inject<EmployeeService>()
+    val tokenService by inject<TokenService>()
 
     route("/employee") {
 
         // create employee
         post() {
+            val validated = tokenService.validateToken(call.request.header(HttpHeaders.Authorization))
+            if (!validated) {
+                call.respondText(INVALID_AUTHORIZATION_HEADER, status = HttpStatusCode.Unauthorized)
+            }
             val employee = call.receive<Employee>()
-            val id = service.create(employee)
+            val id = employeeService.create(employee)
             call.respond(HttpStatusCode.Created, id)
         }
 
         // fetch employee
         get("/{id}") {
-            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException(invalidIdResponseValue)
-            val employee = service.getEmployeeById(id)
+            val validated = tokenService.validateToken(call.request.header(HttpHeaders.Authorization))
+            if (!validated) {
+                call.respondText(INVALID_AUTHORIZATION_HEADER, status = HttpStatusCode.Unauthorized)
+            }
+            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException(INVALID_PARAM_ID)
+            val employee = employeeService.getEmployeeById(id)
             if (employee != null) {
                 call.respond(HttpStatusCode.OK, employee)
             } else {
@@ -36,16 +49,24 @@ fun Route.employeeRoutes() {
 
         // update employee
         put("/{id}") {
-            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException(invalidIdResponseValue)
+            val validated = tokenService.validateToken(call.request.header(HttpHeaders.Authorization))
+            if (!validated) {
+                call.respondText(INVALID_AUTHORIZATION_HEADER, status = HttpStatusCode.Unauthorized)
+            }
+            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException(INVALID_PARAM_ID)
             val employee = call.receive<Employee>()
-            service.update(id, employee)
+            employeeService.update(id, employee)
             call.respond(HttpStatusCode.OK)
         }
 
         // Delete employee
         delete("/{id}") {
-            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException(invalidIdResponseValue)
-            service.delete(id)
+            val validated = tokenService.validateToken(call.request.header(HttpHeaders.Authorization))
+            if (!validated) {
+                call.respondText(INVALID_AUTHORIZATION_HEADER, status = HttpStatusCode.Unauthorized)
+            }
+            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException(INVALID_PARAM_ID)
+            employeeService.delete(id)
             call.respond(HttpStatusCode.OK)
         }
     }

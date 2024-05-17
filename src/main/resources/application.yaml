@@ -12,3 +12,8 @@ postgres:
   url: "$DB_URL:jdbc:postgresql://localhost:5432/playground_db"
   user: "$DB_USER:postgres"
   password: "$DB_PW:admin"
+
+oauth:
+  issuerUrl: "$ISSUER_URL:http://localhost:9000"
+  clientId: "$CLIENT_ID:resource-server-client"
+  clientSecret: "$CLIENT_SECRET:resource-server-secret"
