@@ -7,10 +7,12 @@ The token is verified against an authorization server.
 The repo explores best practices for common use cases, such as:
 - Application setup and configuration
 - Database setup and configuration (postgres), using JetBrains Exposed
-- Authorizing requests  
+- Authorizing requests by integrating with an **Oauth2 Authorization Server**  
 - Routing and CRUD operations
 - Dependency Injection with [Koin](https://insert-koin.io)
 - OpenAPI documentation
+
+Some light reading on the responsibilities of a resource server: https://www.oauth.com/oauth2-servers/the-resource-server/
 
 ## Domain
 The resource guarded by this resource server API is employee information. You can create and change employees, and 

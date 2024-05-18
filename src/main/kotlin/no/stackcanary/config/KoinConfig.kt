@@ -8,8 +8,8 @@ import io.ktor.server.config.*
 import io.ktor.server.config.yaml.*
 import no.stackcanary.dao.EmployeeRepository
 import no.stackcanary.dao.EmployeeRepositoryImpl
+import no.stackcanary.service.AuthorizationService
 import no.stackcanary.service.EmployeeService
-import no.stackcanary.service.TokenService
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -48,5 +48,5 @@ val koinModule = module {
 
     singleOf(::EmployeeRepositoryImpl) { bind<EmployeeRepository>() }
     singleOf(::EmployeeService)
-    singleOf(::TokenService)
+    singleOf(::AuthorizationService)
 }

@@ -5,28 +5,46 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import no.stackcanary.INVALID_AUTHORIZATION_HEADER
-import no.stackcanary.INVALID_PARAM_ID
+import no.stackcanary.*
 import no.stackcanary.routes.dto.Employee
+import no.stackcanary.routes.dto.ErrorResponse
+import no.stackcanary.service.AuthorizationService
 import no.stackcanary.service.EmployeeService
-import no.stackcanary.service.TokenService
 import org.koin.ktor.ext.inject
 
 
-// TODO extract duplicate code
+suspend fun ApplicationCall.handleAuthorization(requiredScope: String, authorizationService: AuthorizationService) {
+    val validationError: ErrorResponse? =
+        authorizationService.validateToken(this.request.header(HttpHeaders.Authorization), requiredScope, response, this.request.uri)
+
+    if (validationError != null) {
+        this.respond(HttpStatusCode.fromValue(validationError.status), validationError)
+    }
+}
+
+/**
+ * Oauth2 spec requires a WWW-Authenticate response header on unauthorized requests
+ */
+suspend fun ApplicationResponse.addWwwAuthenticateHeader(requiredScope: String?) {
+    val builder = StringBuilder()
+    builder.append("Bearer ")
+    if (requiredScope != null) {
+        builder.append(", scope=\"$requiredScope\", error=\"insufficient_scope")
+    }
+    this.header(HttpHeaders.WWWAuthenticate, builder.toString())
+}
+
+
 fun Route.employeeRoutes() {
 
     val employeeService by inject<EmployeeService>()
-    val tokenService by inject<TokenService>()
+    val authorizationService by inject<AuthorizationService>()
 
     route("/employee") {
 
         // create employee
         post() {
-            val validated = tokenService.validateToken(call.request.header(HttpHeaders.Authorization))
-            if (!validated) {
-                call.respondText(INVALID_AUTHORIZATION_HEADER, status = HttpStatusCode.Unauthorized)
-            }
+            call.handleAuthorization(SCOPE_CREATE, authorizationService)
             val employee = call.receive<Employee>()
             val id = employeeService.create(employee)
             call.respond(HttpStatusCode.Created, id)
@@ -34,10 +52,7 @@ fun Route.employeeRoutes() {
 
         // fetch employee
         get("/{id}") {
-            val validated = tokenService.validateToken(call.request.header(HttpHeaders.Authorization))
-            if (!validated) {
-                call.respondText(INVALID_AUTHORIZATION_HEADER, status = HttpStatusCode.Unauthorized)
-            }
+            call.handleAuthorization(SCOPE_READ, authorizationService)
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException(INVALID_PARAM_ID)
             val employee = employeeService.getEmployeeById(id)
             if (employee != null) {
@@ -49,10 +64,7 @@ fun Route.employeeRoutes() {
 
         // update employee
         put("/{id}") {
-            val validated = tokenService.validateToken(call.request.header(HttpHeaders.Authorization))
-            if (!validated) {
-                call.respondText(INVALID_AUTHORIZATION_HEADER, status = HttpStatusCode.Unauthorized)
-            }
+            call.handleAuthorization(SCOPE_EDIT, authorizationService)
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException(INVALID_PARAM_ID)
             val employee = call.receive<Employee>()
             employeeService.update(id, employee)
@@ -61,10 +73,7 @@ fun Route.employeeRoutes() {
 
         // Delete employee
         delete("/{id}") {
-            val validated = tokenService.validateToken(call.request.header(HttpHeaders.Authorization))
-            if (!validated) {
-                call.respondText(INVALID_AUTHORIZATION_HEADER, status = HttpStatusCode.Unauthorized)
-            }
+            call.handleAuthorization(SCOPE_DELETE, authorizationService)
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException(INVALID_PARAM_ID)
             employeeService.delete(id)
             call.respond(HttpStatusCode.OK)

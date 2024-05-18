@@ -1,6 +1,6 @@
 package no.stackcanary.routes.dto
 
-import kotlinx.datetime.LocalDate
+import kotlinx.datetime.*
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -25,4 +25,13 @@ data class Certification(
     val dateEarned: LocalDate,
     val expiryDate: LocalDate,
     val employeeId: Int
+)
+
+@Serializable
+data class ErrorResponse(
+    val status: Int,
+    val error: String,
+    val message: String,
+    val timestamp: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+    val path: String? = null
 )
