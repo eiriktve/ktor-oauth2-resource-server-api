@@ -5,26 +5,29 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Employee(
+    val id: Int,
     val firstName: String,
     val lastName: String,
     val email: String,
     val position: String,
-    val employerId: Int
+    val employer: Company,
+    val certifications: MutableList<Certification> = mutableListOf()
 )
 
 @Serializable
 data class Company(
+    val id: Int,
     val name: String,
     val businessArea: String
 )
 
 @Serializable
 data class Certification(
+    val id: Int,
     val name: String,
     val authority: String,
     val dateEarned: LocalDate,
     val expiryDate: LocalDate,
-    val employeeId: Int
 )
 
 @Serializable

@@ -1,7 +1,11 @@
 package no.stackcanary.dao
 
 import kotlinx.coroutines.Dispatchers
+import no.stackcanary.dao.tables.Certifications
+import no.stackcanary.dao.tables.Companies
 import no.stackcanary.dao.tables.Employees
+import no.stackcanary.routes.dto.Certification
+import no.stackcanary.routes.dto.Company
 import no.stackcanary.routes.dto.Employee
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
@@ -15,9 +19,10 @@ interface EmployeeRepository {
     suspend fun updateEmployee(id: Int, employee: Employee): Unit
     suspend fun fetchEmployeeById(id: Int): Employee?
     suspend fun deleteEmployee(id: Int)
+    suspend fun getCertificationsByEmployeeId(id: Int): List<Certification>
 }
 
-class EmployeeRepositoryImpl(): EmployeeRepository {
+class EmployeeRepositoryImpl() : EmployeeRepository {
 
     /**
      * Utility function used for querying.
@@ -48,26 +53,50 @@ class EmployeeRepositoryImpl(): EmployeeRepository {
                 it[lastName] = employee.lastName
                 it[email] = employee.email
                 it[position] = employee.position
-                it[employerId] = 1 // TODO
+                it[employerId] = 1
             }
         }
     }
 
     override suspend fun fetchEmployeeById(id: Int): Employee? {
         return dbQuery {
-            Employees.selectAll()
+            (Employees innerJoin Companies)
+                .selectAll()
                 .where { Employees.employeeId eq id }
-                .map { Employee(
-                    firstName = it[Employees.firstName],
-                    lastName = it[Employees.lastName],
-                    email = it[Employees.email],
-                    position = it[Employees.position],
-                    employerId = it[Employees.employerId])
-                }.singleOrNull()
-        }
+                .map {
+                    Employee(
+                        id = it[Employees.employeeId],
+                        firstName = it[Employees.firstName],
+                        lastName = it[Employees.lastName],
+                        email = it[Employees.email],
+                        position = it[Employees.position],
+                        Company(
+                            id = it[Companies.companyId],
+                            name = it[Companies.name],
+                            businessArea = it[Companies.business]
+                        )
+                    )
+                }
+        }.singleOrNull()
     }
 
     override suspend fun deleteEmployee(id: Int) {
         dbQuery { Employees.deleteWhere { employeeId eq id } }
+    }
+
+    override suspend fun getCertificationsByEmployeeId(id: Int): List<Certification> {
+        return dbQuery {
+            Certifications.selectAll()
+                .where { Certifications.employeeId eq id }
+                .map {
+                    Certification(
+                        id = it[Certifications.certificationId],
+                        name = it[Certifications.name],
+                        authority = it[Certifications.authority],
+                        dateEarned = it[Certifications.dateEarned],
+                        expiryDate = it[Certifications.expiryDate],
+                    )
+                }
+        }
     }
 }

@@ -26,6 +26,10 @@ data class AuthorizationServerResponse(
     @SerialName("scope") val scope: String? = null
 )
 
+/**
+ * Service responsible for validating the authorization header of incoming API requests, including token validation
+ * against the authorization server.
+ */
 class AuthorizationService(private val client: HttpClient, private val appConfig: AppConfigValues) : KoinComponent {
 
     companion object {
@@ -65,7 +69,7 @@ class AuthorizationService(private val client: HttpClient, private val appConfig
                 }
             }
         } catch (e: Exception) {
-            log.error("Client call to Oauth Authorization Server failed", e)
+            log.error("Client call to Oauth2 Authorization Server failed", e)
             return ErrorResponse(
                 status = HttpStatusCode.InternalServerError.value,
                 error = HttpStatusCode.InternalServerError.description,
