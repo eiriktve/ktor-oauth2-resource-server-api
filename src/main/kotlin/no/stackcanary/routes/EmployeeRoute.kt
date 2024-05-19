@@ -44,7 +44,7 @@ fun Route.employeeRoutes() {
 
         // create employee
         post() {
-            call.handleAuthorization(SCOPE_CREATE, authorizationService)
+            call.handleAuthorization(requiredScope = SCOPE_CREATE, authorizationService)
             val employee = call.receive<Employee>()
             val id = employeeService.create(employee)
             call.respond(HttpStatusCode.Created, id)
@@ -52,7 +52,7 @@ fun Route.employeeRoutes() {
 
         // fetch employee
         get("/{id}") {
-            call.handleAuthorization(SCOPE_READ, authorizationService)
+            call.handleAuthorization(requiredScope = SCOPE_READ, authorizationService)
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException(INVALID_PARAM_ID)
             val employee = employeeService.getEmployeeById(id)
             if (employee != null) {
@@ -64,7 +64,7 @@ fun Route.employeeRoutes() {
 
         // update employee
         put("/{id}") {
-            call.handleAuthorization(SCOPE_EDIT, authorizationService)
+            call.handleAuthorization(requiredScope = SCOPE_EDIT, authorizationService)
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException(INVALID_PARAM_ID)
             val employee = call.receive<Employee>()
             employeeService.update(id, employee)
@@ -73,7 +73,7 @@ fun Route.employeeRoutes() {
 
         // Delete employee
         delete("/{id}") {
-            call.handleAuthorization(SCOPE_DELETE, authorizationService)
+            call.handleAuthorization(requiredScope = SCOPE_DELETE, authorizationService)
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException(INVALID_PARAM_ID)
             employeeService.delete(id)
             call.respond(HttpStatusCode.OK)
