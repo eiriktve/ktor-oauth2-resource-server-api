@@ -48,12 +48,12 @@ class ApplicationTest : KoinTest{
         }
 
         externalServices {
-            hosts("http://mockserver:8080/oauth2/introspect") {
+            hosts("http://mockserver:8080") {
                 install(io.ktor.server.plugins.contentnegotiation.ContentNegotiation) {
                     json
                 }
                 routing {
-                    get("oauth2/v2/userinfo") {
+                    get("oauth2/introspect") {
                         call.respond(HttpStatusCode.OK, """{"active":false}""")
                     }
                 }
