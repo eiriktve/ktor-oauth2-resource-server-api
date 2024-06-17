@@ -1,0 +1,15 @@
+ktor:
+  environment: "test"
+  application:
+    modules:
+      - no.stackcanary.config.AppConfigKt.mainModule
+
+postgres:
+  url: "$DB_URL:jdbc:postgresql://localhost:5432/playground_db"
+  user: "$DB_USER:postgres"
+  password: "$DB_PW:admin"
+
+oauth:
+  issuerUrl: "http://mockserver:8080"
+  clientId: "test"
+  clientSecret: "test"

@@ -25,7 +25,7 @@ suspend fun ApplicationCall.handleAuthorization(requiredScope: String, authoriza
 /**
  * Oauth2 spec requires a WWW-Authenticate response header on unauthorized requests
  */
-suspend fun ApplicationResponse.addWwwAuthenticateHeader(requiredScope: String?) {
+fun ApplicationResponse.addWwwAuthenticateHeader(requiredScope: String?) {
     val builder = StringBuilder()
     builder.append("Bearer ")
     if (requiredScope != null) {

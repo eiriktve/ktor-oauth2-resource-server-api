@@ -93,6 +93,11 @@
             <artifactId>ktor-client-logging-jvm</artifactId>
             <version>${ktor_version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-client-content-negotiation-jvm</artifactId>
+            <version>${ktor_version}</version>
+        </dependency>
 
         <!-- Dependency Injection -->
         <dependency>
@@ -174,6 +179,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test-junit</artifactId>
+            <version>1.9.24</version>
+        </dependency>
+        <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-client-mock-jvm</artifactId>
             <version>${ktor_version}</version>
@@ -186,10 +196,23 @@
         </dependency>
         <dependency>
             <groupId>io.mockk</groupId>
-            <artifactId>mockk</artifactId>
+            <artifactId>mockk-jvm</artifactId>
             <version>1.13.11</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.insert-koin</groupId>
+            <artifactId>koin-test</artifactId>
+            <version>${koin_version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.insert-koin</groupId>
+            <artifactId>koin-test-junit4</artifactId>
+            <version>${koin_version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

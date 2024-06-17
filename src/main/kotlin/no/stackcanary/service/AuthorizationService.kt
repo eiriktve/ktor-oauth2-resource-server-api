@@ -34,7 +34,7 @@ class AuthorizationService(private val client: HttpClient, private val appConfig
 
     companion object {
         private val log = LoggerFactory.getLogger(this::class.java)
-        val json = Json {
+        private val json = Json {
             ignoreUnknownKeys = true
         }
     }
