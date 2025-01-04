@@ -76,7 +76,7 @@ fun Route.employeeRoutes() {
             call.handleAuthorization(requiredScope = SCOPE_DELETE, authorizationService)
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException(INVALID_PARAM_ID)
             employeeService.delete(id)
-            call.respond(HttpStatusCode.OK)
+            call.respond(HttpStatusCode.OK, id)
         }
     }
 }

@@ -4,26 +4,25 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>no.stackcanary</groupId>
     <artifactId>ktor-oauth2-resource-server-api</artifactId>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
     <name>ktor-rest</name>
     <description>Ktor Oauth2 API acting as a resource server</description>
 
     <properties>
         <kotlin.code.style>official</kotlin.code.style>
-        <kotlin_version>1.9.23</kotlin_version>
-        <ktor_version>2.3.11</ktor_version>
+        <kotlin_version>2.1.0</kotlin_version>
+        <ktor_version>2.3.13</ktor_version>
 
-        <logback_version>1.5.6</logback_version>
-        <slf4j_version>2.0.12</slf4j_version>
-        <exposed_version>0.50.1</exposed_version>
-        <postgres_version>42.7.3</postgres_version>
-        <koin_version>3.5.6</koin_version>
+        <logback_version>1.5.15</logback_version>
+        <slf4j_version>2.0.16</slf4j_version>
+        <exposed_version>0.57.0</exposed_version>
+        <postgres_version>42.7.4</postgres_version>
+        <koin_version>4.0.1</koin_version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>no.stackcanary.ApplicationKt</main.class>
     </properties>
 
-    <!-- TODO cleanup dependencies -->
     <dependencies>
 
         <!-- Ktor -->
@@ -77,6 +76,7 @@
             <artifactId>ktor-server-netty-jvm</artifactId>
             <version>${ktor_version}</version>
         </dependency>
+
         <!-- Client -->
         <dependency>
             <groupId>io.ktor</groupId>
@@ -157,7 +157,7 @@
         <dependency>
             <groupId>io.ktor</groupId>
             <artifactId>ktor-server-tests-jvm</artifactId>
-            <version>${ktor_version}</version>
+            <version>2.3.13</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion> <!-- Hopefully they'll just bump this dependency soon -->
@@ -169,7 +169,7 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.17.0</version>
+            <version>1.17.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -181,7 +181,7 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test-junit</artifactId>
-            <version>1.9.24</version>
+            <version>2.1.0</version>
         </dependency>
         <dependency>
             <groupId>io.ktor</groupId>
@@ -192,12 +192,12 @@
         <dependency>
             <groupId>org.jetbrains.kotlinx</groupId>
             <artifactId>kotlinx-coroutines-test</artifactId>
-            <version>1.8.1</version>
+            <version>1.10.1</version>
         </dependency>
         <dependency>
             <groupId>io.mockk</groupId>
             <artifactId>mockk-jvm</artifactId>
-            <version>1.13.11</version>
+            <version>1.13.14</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -230,7 +230,7 @@
                 <groupId>org.jetbrains.kotlin</groupId>
                 <version>${kotlin_version}</version>
                 <configuration>
-                    <jvmTarget>17</jvmTarget>
+                    <jvmTarget>21</jvmTarget>
                     <compilerPlugins>
                         <plugin>kotlinx-serialization</plugin>
                     </compilerPlugins>

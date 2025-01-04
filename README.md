@@ -14,6 +14,12 @@ The repo explores best practices for common use cases, such as:
 
 Some light reading on the responsibilities of a resource server: https://www.oauth.com/oauth2-servers/the-resource-server/
 
+## Technologies
+- kotlin 2.x with JVM 21
+- ktor 2.x
+- koin
+- exposed
+
 ## Domain
 The resource guarded by this resource server API is employee information. You can create and change employees, and 
 retrieve information about employees and their certifications.
