@@ -13,8 +13,8 @@ import no.stackcanary.INSUFFICIENT_SCOPE
 import no.stackcanary.INVALID_AUTHORIZATION_HEADER
 import no.stackcanary.INVALID_TOKEN
 import no.stackcanary.config.AppConfigValues
+import no.stackcanary.routes.ErrorResponse
 import no.stackcanary.routes.addWwwAuthenticateHeader
-import no.stackcanary.routes.dto.ErrorResponse
 import org.koin.core.component.KoinComponent
 import org.slf4j.LoggerFactory
 import java.util.*

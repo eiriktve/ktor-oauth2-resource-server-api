@@ -6,8 +6,6 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import no.stackcanary.*
-import no.stackcanary.routes.dto.Employee
-import no.stackcanary.routes.dto.ErrorResponse
 import no.stackcanary.service.AuthorizationService
 import no.stackcanary.service.EmployeeService
 import org.koin.ktor.ext.inject
@@ -45,8 +43,8 @@ fun Route.employeeRoutes() {
         // create employee
         post() {
             call.handleAuthorization(requiredScope = SCOPE_CREATE, authorizationService)
-            val employee = call.receive<Employee>()
-            val id = employeeService.create(employee)
+            val employee = call.receive<CreateOrUpdateEmployeeRequest>()
+            val id = employeeService.createEmployee(employee)
             call.respond(HttpStatusCode.Created, id)
         }
 
@@ -66,7 +64,7 @@ fun Route.employeeRoutes() {
         put("/{id}") {
             call.handleAuthorization(requiredScope = SCOPE_EDIT, authorizationService)
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException(INVALID_PARAM_ID)
-            val employee = call.receive<Employee>()
+            val employee = call.receive<CreateOrUpdateEmployeeRequest>()
             employeeService.update(id, employee)
             call.respond(HttpStatusCode.OK)
         }

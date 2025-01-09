@@ -9,7 +9,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.testing.*
 import kotlinx.serialization.json.Json
-import no.stackcanary.routes.dto.ErrorResponse
+import no.stackcanary.routes.ErrorResponse
 import org.koin.test.KoinTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -73,9 +73,8 @@ class ApplicationTest : KoinTest{
 
         val error = json.decodeFromString<ErrorResponse>(response.readBytes().toString(Charsets.UTF_8))
 
-        // TODO something is funky
-        assertEquals("Authorization server unavailable, could not validate token", error.message)
-        assertEquals(HttpStatusCode.InternalServerError.value, error.status)
+        assertEquals("The access token is expired, revoked, malformed, or invalid for other reasons", error.message)
+        assertEquals(HttpStatusCode.Unauthorized.value, error.status)
     }
 
 

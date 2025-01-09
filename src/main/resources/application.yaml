@@ -3,7 +3,7 @@ ktor:
   environment: "$KTOR_ENV:dev"
   deployment:
     host: localhost
-    port: "$PORT:8080"
+    port: "$PORT:8181"
   application:
     modules:
       - no.stackcanary.config.AppConfigKt.mainModule

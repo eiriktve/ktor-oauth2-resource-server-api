@@ -4,9 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import no.stackcanary.dao.tables.Certifications
 import no.stackcanary.dao.tables.Companies
 import no.stackcanary.dao.tables.Employees
-import no.stackcanary.routes.dto.Certification
-import no.stackcanary.routes.dto.Company
-import no.stackcanary.routes.dto.Employee
+import no.stackcanary.routes.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
@@ -15,11 +13,13 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.jetbrains.exposed.sql.update
 
 interface EmployeeRepository {
-    suspend fun createEmployee(employee: Employee): Int
-    suspend fun updateEmployee(id: Int, employee: Employee): Unit
-    suspend fun fetchEmployeeById(id: Int): Employee?
+    suspend fun createEmployee(employee: CreateOrUpdateEmployeeRequest): Int
+    suspend fun updateEmployee(id: Int, employee: CreateOrUpdateEmployeeRequest)
+    suspend fun fetchEmployeeById(id: Int): EmployeeResponse?
     suspend fun deleteEmployee(id: Int)
-    suspend fun getCertificationsByEmployeeId(id: Int): List<Certification>
+    suspend fun createCertification(certificationRequest: CertificationRequest, employeeKey: Int): Int
+    suspend fun fetchCertificationsByEmployeeId(id: Int): List<CertificationResponse>
+    suspend fun fetchCompanyById(id: Int): CompanyResponse?
 }
 
 class EmployeeRepositoryImpl() : EmployeeRepository {
@@ -32,21 +32,31 @@ class EmployeeRepositoryImpl() : EmployeeRepository {
     private suspend fun <T> dbQuery(block: suspend () -> T): T =
         newSuspendedTransaction(Dispatchers.IO) { block() }
 
-    override suspend fun createEmployee(employee: Employee): Int = dbQuery {
+    override suspend fun createEmployee(employee: CreateOrUpdateEmployeeRequest): Int = dbQuery {
         Employees.insert {
             it[firstName] = employee.firstName
             it[lastName] = employee.lastName
             it[email] = employee.email
             it[position] = employee.position
-            it[employerId] = 1 // TODO
+            it[employerId] = employee.employerId
         }[Employees.employeeId]
+    }
+
+    override suspend fun createCertification(certificationRequest: CertificationRequest, employeeKey: Int): Int = dbQuery {
+        Certifications.insert {
+            it[name] = certificationRequest.name
+            it[authority] = certificationRequest.authority
+            it[dateEarned] = certificationRequest.dateEarned
+            it[expiryDate] = certificationRequest.expiryDate
+            it[employeeId] = employeeKey
+        }[Certifications.certificationId]
     }
 
     /**
      * @param id ID of the employee to update
-     * @param employee Updated values
+     * @param employee Updated object
      */
-    override suspend fun updateEmployee(id: Int, employee: Employee) {
+    override suspend fun updateEmployee(id: Int, employee: CreateOrUpdateEmployeeRequest) {
         dbQuery {
             Employees.update({ Employees.employeeId eq id }) {
                 it[firstName] = employee.firstName
@@ -58,19 +68,19 @@ class EmployeeRepositoryImpl() : EmployeeRepository {
         }
     }
 
-    override suspend fun fetchEmployeeById(id: Int): Employee? {
+    override suspend fun fetchEmployeeById(id: Int): EmployeeResponse? {
         return dbQuery {
             (Employees innerJoin Companies)
                 .selectAll()
                 .where { Employees.employeeId eq id }
                 .map {
-                    Employee(
+                    EmployeeResponse(
                         id = it[Employees.employeeId],
                         firstName = it[Employees.firstName],
                         lastName = it[Employees.lastName],
                         email = it[Employees.email],
                         position = it[Employees.position],
-                        Company(
+                        CompanyResponse(
                             id = it[Companies.companyId],
                             name = it[Companies.name],
                             businessArea = it[Companies.business]
@@ -80,16 +90,30 @@ class EmployeeRepositoryImpl() : EmployeeRepository {
         }.singleOrNull()
     }
 
+    override suspend fun fetchCompanyById(id: Int): CompanyResponse? {
+        return dbQuery {
+            Companies.selectAll()
+                .where { Companies.companyId eq id }
+                .map {
+                    CompanyResponse(
+                        id = it[Companies.companyId],
+                        name = it[Companies.name],
+                        businessArea = it[Companies.business]
+                    )
+                }
+        }.singleOrNull()
+    }
+
     override suspend fun deleteEmployee(id: Int) {
         dbQuery { Employees.deleteWhere { employeeId eq id } }
     }
 
-    override suspend fun getCertificationsByEmployeeId(id: Int): List<Certification> {
+    override suspend fun fetchCertificationsByEmployeeId(id: Int): List<CertificationResponse> {
         return dbQuery {
             Certifications.selectAll()
                 .where { Certifications.employeeId eq id }
                 .map {
-                    Certification(
+                    CertificationResponse(
                         id = it[Certifications.certificationId],
                         name = it[Certifications.name],
                         authority = it[Certifications.authority],
