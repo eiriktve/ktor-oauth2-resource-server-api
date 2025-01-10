@@ -13,13 +13,13 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.jetbrains.exposed.sql.update
 
 interface EmployeeRepository {
-    suspend fun createEmployee(employee: CreateOrUpdateEmployeeRequest): Int
-    suspend fun updateEmployee(id: Int, employee: CreateOrUpdateEmployeeRequest)
+    suspend fun createEmployee(employee: CreateEmployeeRequest): Int
+    suspend fun updateEmployee(id: Int, employee: CreateEmployeeRequest)
     suspend fun fetchEmployeeById(id: Int): EmployeeResponse?
     suspend fun deleteEmployee(id: Int)
     suspend fun createCertification(certificationRequest: CertificationRequest, employeeKey: Int): Int
     suspend fun fetchCertificationsByEmployeeId(id: Int): List<CertificationResponse>
-    suspend fun fetchCompanyById(id: Int): CompanyResponse?
+    suspend fun deleteCertificationByEmployeeId(id: Int)
 }
 
 class EmployeeRepositoryImpl() : EmployeeRepository {
@@ -32,7 +32,7 @@ class EmployeeRepositoryImpl() : EmployeeRepository {
     private suspend fun <T> dbQuery(block: suspend () -> T): T =
         newSuspendedTransaction(Dispatchers.IO) { block() }
 
-    override suspend fun createEmployee(employee: CreateOrUpdateEmployeeRequest): Int = dbQuery {
+    override suspend fun createEmployee(employee: CreateEmployeeRequest): Int = dbQuery {
         Employees.insert {
             it[firstName] = employee.firstName
             it[lastName] = employee.lastName
@@ -52,11 +52,7 @@ class EmployeeRepositoryImpl() : EmployeeRepository {
         }[Certifications.certificationId]
     }
 
-    /**
-     * @param id ID of the employee to update
-     * @param employee Updated object
-     */
-    override suspend fun updateEmployee(id: Int, employee: CreateOrUpdateEmployeeRequest) {
+    override suspend fun updateEmployee(id: Int, employee: CreateEmployeeRequest) {
         dbQuery {
             Employees.update({ Employees.employeeId eq id }) {
                 it[firstName] = employee.firstName
@@ -90,23 +86,15 @@ class EmployeeRepositoryImpl() : EmployeeRepository {
         }.singleOrNull()
     }
 
-    override suspend fun fetchCompanyById(id: Int): CompanyResponse? {
-        return dbQuery {
-            Companies.selectAll()
-                .where { Companies.companyId eq id }
-                .map {
-                    CompanyResponse(
-                        id = it[Companies.companyId],
-                        name = it[Companies.name],
-                        businessArea = it[Companies.business]
-                    )
-                }
-        }.singleOrNull()
-    }
-
     override suspend fun deleteEmployee(id: Int) {
         dbQuery { Employees.deleteWhere { employeeId eq id } }
     }
+
+    override suspend fun deleteCertificationByEmployeeId(id: Int) {
+        dbQuery { Certifications.deleteWhere { employeeId eq id } }
+    }
+
+
 
     override suspend fun fetchCertificationsByEmployeeId(id: Int): List<CertificationResponse> {
         return dbQuery {

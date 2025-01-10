@@ -4,7 +4,7 @@ import kotlinx.datetime.*
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CreateOrUpdateEmployeeRequest(
+data class CreateEmployeeRequest(
     val firstName: String,
     val lastName: String,
     val email: String,

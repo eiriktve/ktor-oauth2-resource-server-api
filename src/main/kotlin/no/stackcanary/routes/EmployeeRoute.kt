@@ -43,7 +43,7 @@ fun Route.employeeRoutes() {
         // create employee
         post() {
             call.handleAuthorization(requiredScope = SCOPE_CREATE, authorizationService)
-            val employee = call.receive<CreateOrUpdateEmployeeRequest>()
+            val employee = call.receive<CreateEmployeeRequest>()
             val id = employeeService.createEmployee(employee)
             call.respond(HttpStatusCode.Created, id)
         }
@@ -64,7 +64,7 @@ fun Route.employeeRoutes() {
         put("/{id}") {
             call.handleAuthorization(requiredScope = SCOPE_EDIT, authorizationService)
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException(INVALID_PARAM_ID)
-            val employee = call.receive<CreateOrUpdateEmployeeRequest>()
+            val employee = call.receive<CreateEmployeeRequest>()
             employeeService.update(id, employee)
             call.respond(HttpStatusCode.OK)
         }

@@ -54,7 +54,7 @@ CREATE TABLE Employee (
 -- Create Certification Table
 CREATE TABLE Certification (
     certification_id SERIAL PRIMARY KEY,
-    name VARCHAR(100) UNIQUE NOT NULL,
+    name VARCHAR(100) NOT NULL,
     authority VARCHAR(100) NOT NULL,
     date_earned DATE NOT NULL,
     expiry_date DATE NOT NULL,
