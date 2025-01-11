@@ -1,19 +1,79 @@
 openapi: 3.0.0
 info:
-  title: Sample API
-  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
-  version: 0.1.9
+  title: Ktor Oauth2 Resource Server Api
+  description: Resource server CRUD API for fetching, storing, updating and deleting employee information.
+  version: 1.0.1
 paths:
-  /:
-    get:
-      summary: Returns a welcoming text.
-      description: Marked for removal
+  /employee:
+    post:
+      summary: Creates a new employee.
       responses:
-        '200': # status code
-          description: A welcoming text
+        '201':
+          description: Employee Created.
           content:
             application/json:
               schema:
-                type: string
+                type: integer
+  /employee/{id}:
+    get:
+      summary: Fetches an employee.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the employee to fetch
+      responses:
+        '200':
+          description: Employee found.
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: Employee with provided ID not found.
+          content:
+            application/json:
+              schema:
+                type: null
+    put:
+      summary: Updates an employee.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the employee to update.
+      responses:
+        '200':
+          description: Employee updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: Employee with ID not found, could not update.
+          content:
+            application/json:
+              schema:
+                type: null
+    delete:
+      summary: Deletes an employee.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the employee to delete
+      responses:
+        '200': # status code
+          description: Employee deleted.
+          content:
+            application/json:
+              schema:
+                type: null
 
 

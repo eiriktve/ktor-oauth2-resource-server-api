@@ -1,0 +1,147 @@
+{
+	"info": {
+		"_postman_id": "7d221b29-bf3f-4516-bdb3-4c30a0917658",
+		"name": "Resource server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11463340"
+	},
+	"item": [
+		{
+			"name": "fetchEmployee",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8181/employee/52",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8181",
+					"path": [
+						"employee",
+						"52"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteEmployee",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8181/employee/52",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8181",
+					"path": [
+						"employee",
+						"52"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "postEmployee",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"firstName\": \"Arthas\",\r\n        \"lastName\": \"Morgraine\",\r\n        \"email\": \"Arthas@ansatt.no\",\r\n        \"position\": \"Junior Developer\",\r\n        \"employerId\": 5,\r\n        \"certifications\": [\r\n            {\r\n                \"name\": \"Certified Undead Army General\",\r\n                \"authority\": \"Azeroth Committee\",\r\n                \"dateEarned\": \"2024-05-19\",\r\n                \"expiryDate\": \"2024-07-08\"\r\n            }\r\n        ]\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8181/employee",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8181",
+					"path": [
+						"employee"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateEmployee",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"firstName\": \"Arthas\",\r\n        \"lastName\": \"Menethil\",\r\n        \"email\": \"Arthas@ansatt.no\",\r\n        \"position\": \"General Staffer\",\r\n        \"employerId\": 5,    \r\n        \"certifications\": [\r\n            {\r\n                \"name\": \"Certified Undead Army General Commander\",\r\n                \"authority\": \"Azeroth Committee\",\r\n                \"dateEarned\": \"2024-05-19\",\r\n                \"expiryDate\": \"2024-07-08\"\r\n            }\r\n        ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8181/employee/52",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8181",
+					"path": [
+						"employee",
+						"52"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
