@@ -3,8 +3,10 @@ package no.stackcanary.routes
 import kotlinx.datetime.*
 import kotlinx.serialization.Serializable
 
+// TODO Clean up the DTOs, too much duplication
+
 @Serializable
-data class CreateEmployeeRequest(
+data class EmployeeRequest(
     val firstName: String,
     val lastName: String,
     val email: String,

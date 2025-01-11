@@ -10,11 +10,10 @@ import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.upsert
 
 interface EmployeeRepository {
-    suspend fun createEmployee(employee: CreateEmployeeRequest): Int
-    suspend fun updateEmployee(id: Int, employee: CreateEmployeeRequest)
+    suspend fun upsertEmployee(employee: EmployeeRequest, employeeKey: Int?): Int
     suspend fun fetchEmployeeById(id: Int): EmployeeResponse?
     suspend fun deleteEmployee(id: Int)
     suspend fun createCertification(certificationRequest: CertificationRequest, employeeKey: Int): Int
@@ -32,12 +31,19 @@ class EmployeeRepositoryImpl() : EmployeeRepository {
     private suspend fun <T> dbQuery(block: suspend () -> T): T =
         newSuspendedTransaction(Dispatchers.IO) { block() }
 
-    override suspend fun createEmployee(employee: CreateEmployeeRequest): Int = dbQuery {
-        Employees.insert {
+    /**
+     * Upsert is achieved using a combination of SQL_ON_CONFLICT or ON_DUPLICATE_KEY_UPDATE (depending on your database)
+     * and Exposed’s insert or replace functionality
+     */
+    override suspend fun upsertEmployee(employee: EmployeeRequest, employeeKey: Int?): Int = dbQuery {
+        Employees.upsert(
+            onUpdateExclude = listOf(Employees.employeeId, Employees.email)
+        ) {
+            if (employeeKey != null) it[employeeId] = employeeKey
             it[firstName] = employee.firstName
             it[lastName] = employee.lastName
-            it[email] = employee.email
             it[position] = employee.position
+            it[email] = employee.email
             it[employerId] = employee.employerId
         }[Employees.employeeId]
     }
@@ -50,18 +56,6 @@ class EmployeeRepositoryImpl() : EmployeeRepository {
             it[expiryDate] = certificationRequest.expiryDate
             it[employeeId] = employeeKey
         }[Certifications.certificationId]
-    }
-
-    override suspend fun updateEmployee(id: Int, employee: CreateEmployeeRequest) {
-        dbQuery {
-            Employees.update({ Employees.employeeId eq id }) {
-                it[firstName] = employee.firstName
-                it[lastName] = employee.lastName
-                it[email] = employee.email
-                it[position] = employee.position
-                it[employerId] = 1
-            }
-        }
     }
 
     override suspend fun fetchEmployeeById(id: Int): EmployeeResponse? {

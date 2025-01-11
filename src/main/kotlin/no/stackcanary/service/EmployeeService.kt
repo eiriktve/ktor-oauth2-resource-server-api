@@ -1,7 +1,7 @@
 package no.stackcanary.service
 
 import no.stackcanary.dao.EmployeeRepositoryImpl
-import no.stackcanary.routes.CreateEmployeeRequest
+import no.stackcanary.routes.EmployeeRequest
 import no.stackcanary.routes.EmployeeResponse
 
 class EmployeeService(private val repository: EmployeeRepositoryImpl) {
@@ -11,13 +11,14 @@ class EmployeeService(private val repository: EmployeeRepositoryImpl) {
             .also { it?.certifications?.addAll(repository.fetchCertificationsByEmployeeId(id)) }
 
 
-    suspend fun createEmployee(employee: CreateEmployeeRequest) {
-        val employeeId: Int = repository.createEmployee(employee)
+    /**
+     * @param id null if this is a new employee, non-null if this is an update
+     */
+    suspend fun upsertEmployee(employee: EmployeeRequest, employeeKey: Int?): Int {
+        val employeeId: Int = repository.upsertEmployee(employee, employeeKey)
         employee.certifications.forEach { repository.createCertification(it, employeeId) }
+        return employeeId
     }
-
-    suspend fun update(id: Int, employee: CreateEmployeeRequest) =
-        repository.updateEmployee(id, employee)
 
     suspend fun delete(id: Int) {
         repository.deleteCertificationByEmployeeId(id)
