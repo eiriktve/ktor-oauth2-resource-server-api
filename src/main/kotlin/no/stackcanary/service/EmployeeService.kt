@@ -3,20 +3,21 @@ package no.stackcanary.service
 import no.stackcanary.dao.EmployeeRepositoryImpl
 import no.stackcanary.routes.EmployeeRequest
 import no.stackcanary.routes.EmployeeResponse
+import no.stackcanary.routes.IdResponse
 
 class EmployeeService(private val repository: EmployeeRepositoryImpl) {
 
-    suspend fun getEmployeeById(id: Int): EmployeeResponse? =
-        repository.fetchEmployeeById(id)
-            .also { it?.certifications?.addAll(repository.fetchCertificationsByEmployeeId(id)) }
+    suspend fun getEmployeeById(employeeKey: Int): EmployeeResponse? =
+        repository.fetchEmployeeById(employeeKey)
+            .also { it?.certifications?.addAll(repository.fetchCertificationsByEmployeeId(employeeKey)) }
 
     /**
      * @param employeeKey null if this is a new employee, non-null if this is an update
      */
-    suspend fun upsertEmployee(employee: EmployeeRequest, employeeKey: Int?): Int {
+    suspend fun upsertEmployee(employee: EmployeeRequest, employeeKey: Int?): IdResponse {
         val employeeId: Int = repository.upsertEmployee(employee, employeeKey)
         employee.certifications.forEach { repository.createCertification(it, employeeId) }
-        return employeeId
+        return IdResponse(id = employeeId)
     }
 
     suspend fun updateEmployee(employee: EmployeeRequest, employeeKey: Int): EmployeeResponse? {
@@ -26,8 +27,9 @@ class EmployeeService(private val repository: EmployeeRepositoryImpl) {
         return getEmployeeById(employeeKey)
     }
 
-    suspend fun delete(id: Int) {
-        repository.deleteCertificationByEmployeeId(id)
-        repository.deleteEmployee(id)
+    suspend fun delete(employeeKey: Int): IdResponse {
+        repository.deleteCertificationByEmployeeId(employeeKey)
+        repository.deleteEmployee(employeeKey)
+        return IdResponse(id = employeeKey)
     }
 }

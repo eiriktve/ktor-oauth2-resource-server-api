@@ -13,7 +13,7 @@ paths:
           content:
             application/json:
               schema:
-                type: integer
+                type: object
   /employee/{id}:
     get:
       summary: Fetches an employee.
@@ -74,6 +74,6 @@ paths:
           content:
             application/json:
               schema:
-                type: null
+                type: object
 
 
