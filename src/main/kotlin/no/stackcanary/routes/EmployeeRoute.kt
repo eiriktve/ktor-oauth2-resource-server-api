@@ -40,7 +40,7 @@ fun Route.employeeRoutes() {
 
     route("/employee") {
 
-        // create employee
+        // Create employee
         post() {
             call.handleAuthorization(requiredScope = SCOPE_CREATE, authorizationService)
             val employee = call.receive<EmployeeRequest>()
@@ -48,29 +48,22 @@ fun Route.employeeRoutes() {
             call.respond(HttpStatusCode.Created, employeeId)
         }
 
-        // fetch employee
+        // Fetch employee
         get("/{id}") {
             call.handleAuthorization(requiredScope = SCOPE_READ, authorizationService)
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException(INVALID_PARAM_ID)
-            val employee = employeeService.getEmployeeById(id)
-            if (employee != null) {
-                call.respond(HttpStatusCode.OK, employee)
-            } else {
-                call.respond(HttpStatusCode.NotFound)
-            }
+            employeeService.getEmployeeById(id)?.let { call.respond(HttpStatusCode.OK, it) }
+                ?: call.respond(HttpStatusCode.NotFound)
         }
 
-        // update employee
+        // Update employee, requires the full structure of the new Employee-object
         put("/{id}") {
             call.handleAuthorization(requiredScope = SCOPE_EDIT, authorizationService)
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException(INVALID_PARAM_ID)
             val employee = call.receive<EmployeeRequest>()
-            val updated = employeeService.upsertEmployee(employee, id)
-            if (updated != 0) {
-                call.respond(HttpStatusCode.OK)
-            } else {
-                call.respond(HttpStatusCode.NotFound)
-            }
+            employeeService.updateEmployee(employee, id)?.let { call.respond(HttpStatusCode.OK, it) }
+                ?: call.respond(HttpStatusCode.NotFound
+            )
         }
 
         // Delete employee

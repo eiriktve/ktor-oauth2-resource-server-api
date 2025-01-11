@@ -88,8 +88,6 @@ class EmployeeRepositoryImpl() : EmployeeRepository {
         dbQuery { Certifications.deleteWhere { employeeId eq id } }
     }
 
-
-
     override suspend fun fetchCertificationsByEmployeeId(id: Int): List<CertificationResponse> {
         return dbQuery {
             Certifications.selectAll()
