@@ -52,7 +52,8 @@ data class CertificationResponse(
 
 @Serializable
 data class IdResponse(
-    val id: Int
+    val id: Int,
+    val message: String
 )
 
 @Serializable

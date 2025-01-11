@@ -17,7 +17,7 @@ class EmployeeService(private val repository: EmployeeRepositoryImpl) {
     suspend fun upsertEmployee(employee: EmployeeRequest, employeeKey: Int?): IdResponse {
         val employeeId: Int = repository.upsertEmployee(employee, employeeKey)
         employee.certifications.forEach { repository.createCertification(it, employeeId) }
-        return IdResponse(id = employeeId)
+        return IdResponse(id = employeeId, message = "Employee updated")
     }
 
     suspend fun updateEmployee(employee: EmployeeRequest, employeeKey: Int): EmployeeResponse? {
@@ -30,6 +30,6 @@ class EmployeeService(private val repository: EmployeeRepositoryImpl) {
     suspend fun delete(employeeKey: Int): IdResponse {
         repository.deleteCertificationByEmployeeId(employeeKey)
         repository.deleteEmployee(employeeKey)
-        return IdResponse(id = employeeKey)
+        return IdResponse(id = employeeKey, message = "Employee deleted")
     }
 }
