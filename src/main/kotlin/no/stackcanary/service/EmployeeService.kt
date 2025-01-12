@@ -17,7 +17,7 @@ class EmployeeService(private val repository: EmployeeRepositoryImpl) {
     suspend fun upsertEmployee(employee: EmployeeRequest, employeeKey: Int?): IdResponse {
         val employeeId: Int = repository.upsertEmployee(employee, employeeKey)
         employee.certifications.forEach { repository.createCertification(it, employeeId) }
-        return IdResponse(id = employeeId, message = "Employee updated")
+        return IdResponse(id = employeeId, message = if (employeeKey == null) "Employee created" else "Employee updated")
     }
 
     suspend fun updateEmployee(employee: EmployeeRequest, employeeKey: Int): EmployeeResponse? {

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>no.stackcanary</groupId>
     <artifactId>ktor-oauth2-resource-server-api</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <name>ktor-rest</name>
     <description>Ktor Oauth2 API acting as a resource server</description>
 
