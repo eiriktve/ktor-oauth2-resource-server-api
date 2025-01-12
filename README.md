@@ -66,6 +66,6 @@ CREATE TABLE Certification (
 Swagger doc is available at **{server}{port}/openapi**
 
 ## Postman examples
-There's a postman collection located [here](/postman). As for the Authorization header, you need to get a token the
+There's a postman collection located [here](/postman). As for the Authorization header, you need to get a token from the
 configured Authorization Server. If you want to set it up yourself, I have one 
 [here](https://github.com/eiriktve/kotlin-spring-oauth2-authorization-server) you can clone. 
